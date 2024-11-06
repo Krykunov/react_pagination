@@ -11,6 +11,12 @@ export const Pagination: React.FC<PaginationParams> = ({
 }) => {
   const numOfPages = Math.ceil(total / perPage);
 
+  const pageClickHandler = (i: number) => {
+    if (currentPage !== i + 1) {
+      onPageChange(i + 1);
+    }
+  };
+
   return (
     <>
       <ul className="pagination">
@@ -41,7 +47,7 @@ export const Pagination: React.FC<PaginationParams> = ({
               data-cy="pageLink"
               className="page-link"
               href="#"
-              onClick={() => onPageChange(index + 1)}
+              onClick={() => pageClickHandler(index)}
             >
               {index + 1}
             </a>

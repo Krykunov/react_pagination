@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { useSearchParams } from 'react-router-dom';
 
@@ -14,24 +13,35 @@ const paginationOptions: number[] = [3, 5, 10, 20];
 
 export const App: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+
+  const getSearchParam = (param: string, defaultValue: number) =>
+    Number(searchParams.get(param) ?? defaultValue);
+
   const [perPage, setPerPage] = useState(
-    Number(searchParams.get('perPage')) || paginationOptions[1],
+    getSearchParam('perPage', paginationOptions[1]),
   );
-  const [currentPage, setCurrentPage] = useState(
-    Number(searchParams.get('page')) || 1,
-  );
+
+  const [currentPage, setCurrentPage] = useState(getSearchParam('page', 1));
 
   const showItems = preparePageItems(items, perPage, currentPage);
   const pageHeader = `Page ${currentPage} (items ${perPage * (currentPage - 1) + 1} - ${Math.min(perPage * currentPage, items.length)} of ${items.length})`;
 
+  const perPageSelectHandler = (
+    event: React.ChangeEvent<HTMLSelectElement>,
+  ) => {
+    setPerPage(Number(event.target.value));
+    setCurrentPage(1);
+  };
+
   const pageChangeHandler = (page: number) => {
-    setCurrentPage(page);
-    setSearchParams(`?page=${currentPage}&perPage=${perPage}`);
+    if (page !== currentPage) {
+      setCurrentPage(page);
+    }
   };
 
   useEffect(() => {
     setSearchParams(`?page=${currentPage}&perPage=${perPage}`);
-  }, [currentPage, perPage, setSearchParams, searchParams]);
+  }, [currentPage, perPage, searchParams, setSearchParams]);
 
   return (
     <div className="container">
@@ -48,10 +58,7 @@ export const App: React.FC = () => {
             data-cy="perPageSelector"
             id="perPageSelector"
             className="form-control"
-            onChange={event => {
-              setPerPage(Number(event.target.value));
-              setCurrentPage(1);
-            }}
+            onChange={perPageSelectHandler}
           >
             {paginationOptions.map(option => (
               <option key={option} value={option}>
