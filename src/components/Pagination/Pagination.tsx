@@ -28,7 +28,7 @@ export const Pagination: React.FC<PaginationParams> = ({
           <a
             data-cy="prevLink"
             className="page-link"
-            href="#prev"
+            href="#"
             aria-disabled={currentPage === 1}
             onClick={() => currentPage > 1 && onPageChange(currentPage - 1)}
           >
