@@ -7,7 +7,7 @@ import React from 'react';
 
 const router = createBrowserRouter([
   {
-    path: 'https://Krykunov.github.io/react_pagination/',
+    path: '/',
     element: <App />,
   },
 ]);
